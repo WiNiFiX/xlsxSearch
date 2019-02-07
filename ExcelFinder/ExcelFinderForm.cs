@@ -22,9 +22,19 @@ namespace ExcelFinder
         public ExcelFinder()
         {
             InitializeComponent();
+
+            InitializeUIs();
             InitializeList();
             InitializeEventHandlers();
         }
+
+        private void InitializeUIs()
+        {
+            label_keyword.Text = Properties.Resources.LabelKeywordToSearch;
+            label_folder.Text = Properties.Resources.LabelFolderToSearch;
+            button_Find.Text = Properties.Resources.ButtonFind;
+        }
+
 
         private void InitializeList()
         {
@@ -123,7 +133,7 @@ namespace ExcelFinder
             var selected =  listView_result.SelectedItems;
             string path = selected[0].SubItems[0].Text;
 
-            System.Diagnostics.Process.Start("explorer.exe", path);
+            System.Diagnostics.Process.Start(path);
         }
     }
 }

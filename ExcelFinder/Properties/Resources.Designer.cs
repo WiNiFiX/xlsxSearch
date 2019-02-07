@@ -59,5 +59,32 @@ namespace ExcelFinder.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find.
+        /// </summary>
+        internal static string ButtonFind {
+            get {
+                return ResourceManager.GetString("ButtonFind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder to search.
+        /// </summary>
+        internal static string LabelFolderToSearch {
+            get {
+                return ResourceManager.GetString("LabelFolderToSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keyword to search.
+        /// </summary>
+        internal static string LabelKeywordToSearch {
+            get {
+                return ResourceManager.GetString("LabelKeywordToSearch", resourceCulture);
+            }
+        }
     }
 }
