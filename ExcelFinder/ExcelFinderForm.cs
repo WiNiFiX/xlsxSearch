@@ -17,7 +17,7 @@ namespace ExcelFinder
 {
     public partial class ExcelFinder : Form
     {
-
+        private System.Drawing.Color[] stripColors = new System.Drawing.Color[] { SystemColors.ButtonFace, SystemColors.Window };
 
         public ExcelFinder()
         {
@@ -134,6 +134,22 @@ namespace ExcelFinder
             string path = selected[0].SubItems[0].Text;
 
             System.Diagnostics.Process.Start(path);
+        }
+
+        private void listView_result_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            // color rows stripes
+            if (e.Item.ListView.View == View.Details)
+            {
+                e.Item.BackColor = stripColors[e.Item.Index % stripColors.Length];
+            }
+
+            e.DrawDefault = true;
+        }
+
+        private void listView_result_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawDefault = true;
         }
     }
 }

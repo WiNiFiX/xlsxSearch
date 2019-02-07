@@ -84,8 +84,11 @@
             this.listView_result.FullRowSelect = true;
             this.listView_result.GridLines = true;
             this.listView_result.Name = "listView_result";
+            this.listView_result.OwnerDraw = true;
             this.listView_result.UseCompatibleStateImageBehavior = false;
             this.listView_result.View = System.Windows.Forms.View.Details;
+            this.listView_result.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.listView_result_DrawColumnHeader);
+            this.listView_result.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_result_DrawItem);
             this.listView_result.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_keyword_KeyDown);
             this.listView_result.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView_result_MouseDoubleClick);
             // 
