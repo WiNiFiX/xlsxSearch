@@ -135,13 +135,16 @@
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="txtProcessingFile.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Left, Right</value>
+    <value>Bottom, Left</value>
   </data>
   <data name="txtProcessingFile.Location" type="System.Drawing.Point, System.Drawing">
     <value>15, 477</value>
   </data>
   <data name="txtProcessingFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>704, 20</value>
+  </data>
+  <data name="lblProgress.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="lblProgress.AutoSize" type="System.Boolean, mscorlib">
@@ -3795,9 +3798,6 @@
         Kjje/yk66v8pO/T/Kz77/yw/+/8xQ/j/MEL0/y4+7P8rOuP/KTba/yg10/AsP9WEAAAAAIABAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIABAAA=
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing">
     <value>747, 544</value>

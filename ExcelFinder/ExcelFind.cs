@@ -8,6 +8,8 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.IO;
 using System.IO.Packaging;
 using System.Windows.Forms;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
 
 namespace ExcelFinder
 {
@@ -62,8 +64,11 @@ namespace ExcelFinder
             }
 
             // then enumerate excel(.xlsx) files and search
-            string[] files = Directory.GetFiles(pathToSearch, "*.xlsx", SearchOption.AllDirectories);
+            string[] files1 = Directory.GetFiles(pathToSearch, "*.xlsx", SearchOption.AllDirectories);
+            string[] files2 = Directory.GetFiles(pathToSearch, "*.xls", SearchOption.AllDirectories);
             int c = 0;
+
+            var files = files1.Union(files2).ToArray();
 
             foreach (var file in files)
             {
@@ -71,98 +76,172 @@ namespace ExcelFinder
                 txtFileName.Text = Path.GetFileName(file);
                 lblProgress.Text = $"Processing file: {c} of {files.Length}";
 
-                // IO exception occurs when file is already opened by others
-                Package spreadSheetPackage = null;
-                try
+                if (Path.GetExtension(file).Equals(".xlsx"))
                 {
-                    // open file
-                    spreadSheetPackage = Package.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
-                }
-                catch (Exception e)
-                {
-                    ExcelInfo err = new ExcelInfo();
-                    err.error = e.Message;
-                    err.fileName = Path.GetFileName(file);
-                    err.path = Path.GetDirectoryName(file);
-                    err.content = e.Message;
-                    infoList.Add(err);
-                    continue;
-                }
-
-                using (SpreadsheetDocument document = SpreadsheetDocument.Open(spreadSheetPackage))
-                {
-                    var wbPart = document.WorkbookPart;
-                    var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
-
-                    // loop sheets in workbook
-                    // this pyramid code shall be refactored, not nice.
-                    foreach (var sheet in wbPart.Workbook.Descendants<Sheet>())
+                    // IO exception occurs when file is already opened by others
+                    Package spreadSheetPackage = null;
+                    try
                     {
-                        var wsheetPart = wbPart.GetPartById(sheet.Id) as WorksheetPart;
-                        if (wsheetPart == null)
-                        {
-                            Console.WriteLine("WorksheetPart Not Found !!");
-                            return;
-                        }
+                        // open file
+                        spreadSheetPackage = Package.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    }
+                    catch (Exception e)
+                    {
+                        ExcelInfo err = new ExcelInfo();
+                        err.error = e.Message;
+                        err.fileName = Path.GetFileName(file);
+                        err.path = Path.GetDirectoryName(file);
+                        err.content = e.Message;
+                        infoList.Add(err);
+                        continue;
+                    }
 
-                        var ws = wsheetPart.Worksheet;
-                        foreach (var row in ws.Descendants<Row>())
+                    using (SpreadsheetDocument document = SpreadsheetDocument.Open(spreadSheetPackage))
+                    {
+                        var wbPart = document.WorkbookPart;
+                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+
+                        // loop sheets in workbook
+                        // this pyramid code shall be refactored, not nice.
+                        foreach (var sheet in wbPart.Workbook.Descendants<Sheet>())
                         {
-                            var list = new List<string>();
-                            UInt32Value colnum = 0;
-                            foreach (Cell cell in row)
+                            var wsheetPart = wbPart.GetPartById(sheet.Id) as WorksheetPart;
+                            if (wsheetPart == null)
                             {
-                                colnum++; // count up column number
+                                Console.WriteLine("WorksheetPart Not Found !!");
+                                return;
+                            }
 
-                                string value = cell.InnerText;
-                                if (cell.DataType != null)
+                            var ws = wsheetPart.Worksheet;
+                            foreach (var row in ws.Descendants<Row>())
+                            {
+                                var list = new List<string>();
+                                UInt32Value colnum = 0;
+                                foreach (Cell cell in row)
                                 {
-                                    switch (cell.DataType.Value)
+                                    colnum++; // count up column number
+
+                                    string value = cell.InnerText;
+                                    if (cell.DataType != null)
                                     {
-                                        case CellValues.Boolean:
-                                        case CellValues.Date:
-                                        case CellValues.Error:
-                                        case CellValues.InlineString:
-                                        case CellValues.Number:
-                                        case CellValues.String:
-                                            value = cell.InnerText;
-                                            break;
-                                        case CellValues.SharedString:
-                                            if (stringTable != null)
-                                                value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
-                                            break;
-                                        default:
-                                            break;
+                                        switch (cell.DataType.Value)
+                                        {
+                                            case CellValues.Boolean:
+                                            case CellValues.Date:
+                                            case CellValues.Error:
+                                            case CellValues.InlineString:
+                                            case CellValues.Number:
+                                            case CellValues.String:
+                                                value = cell.InnerText;
+                                                break;
+                                            case CellValues.SharedString:
+                                                if (stringTable != null)
+                                                    value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
+                                                break;
+                                            default:
+                                                break;
+                                        }
                                     }
+
+
+                                    // check if value contains keyword to seach
+                                    if (!value.Contains(stringToSearch))
+                                    {
+                                        continue;
+                                    }
+
+                                    // go on if keyword found
+                                    list.Add(value);
+
+                                    // construct data class and store int list
+                                    ExcelInfo data = new ExcelInfo();
+                                    data.content = value;
+                                    data.row = row.RowIndex;
+                                    data.column = colnum;
+                                    data.sheetName = sheet.Name;
+                                    data.fileName = Path.GetFileName(file);
+                                    data.content = value;
+                                    data.path = Path.GetDirectoryName(file);
+
+                                    infoList.Add(data);
                                 }
-
-
-                                // check if value contains keyword to seach
-                                if (!value.Contains(stringToSearch))
-                                {
-                                    continue;
-                                }
-
-                                // go on if keyword found
-                                list.Add(value);
-
-                                // construct data class and store int list
-                                ExcelInfo data = new ExcelInfo();
-                                data.content = value;
-                                data.row = row.RowIndex;
-                                data.column = colnum;
-                                data.sheetName = sheet.Name;
-                                data.fileName = Path.GetFileName(file);
-                                data.content = value;
-                                data.path = Path.GetDirectoryName(file);
-
-                                infoList.Add(data);
-
                             }
                         }
                     }
                 }
+                else // old XLS format, load and search it...
+                {
+                    IWorkbook mWorkBook = null;
+                    using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                    {
+                        try
+                        {
+                            mWorkBook = new HSSFWorkbook(fs);
+
+                            for (int sheetNo = 0; sheetNo < mWorkBook.NumberOfSheets; sheetNo++)
+                            {
+                                var sheet = mWorkBook.GetSheetAt(sheetNo);
+                                for (int rowNo = 0; rowNo < sheet.LastRowNum; rowNo++)
+                                {
+                                    var list = new List<string>();
+
+                                    var row = sheet.GetRow(rowNo);
+                                    if (row == null) continue;
+
+                                    for (int colNo = 0; colNo < row.LastCellNum; colNo++)
+                                    {
+                                        var cell = row.GetCell(colNo);
+                                        var value = CellValueAsString(cell, rowNo, colNo, sheet.SheetName, file);
+
+                                        // check if value contains keyword to seach
+                                        if (!value.Contains(stringToSearch))
+                                        {
+                                            continue;
+                                        }
+
+                                        // go on if keyword found
+                                        list.Add(value);
+
+                                        // construct data class and store int list
+                                        ExcelInfo data = new ExcelInfo();
+                                        data.content = value;
+                                        data.row = (uint)rowNo;
+                                        data.column = (uint)colNo;
+                                        data.sheetName = sheet.SheetName;
+                                        data.fileName = Path.GetFileName(file);
+                                        data.content = value;
+                                        data.path = Path.GetDirectoryName(file);
+
+                                        infoList.Add(data);
+                                    }
+                                }
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            ExcelInfo err = new ExcelInfo();
+                            err.error = e.Message;
+                            err.fileName = Path.GetFileName(file);
+                            err.path = Path.GetDirectoryName(file);
+                            err.content = e.Message;
+                            infoList.Add(err);
+                            continue;
+                        }
+                    }
+                }
+                
             }
+        }
+
+        private string CellValueAsString(ICell cell, int row, int col, string sheetName, string fileName)
+        {
+            if (cell == null)
+                return "";
+            if (cell.CellType == NPOI.SS.UserModel.CellType.String)
+                return cell.StringCellValue;
+            if (cell.CellType == NPOI.SS.UserModel.CellType.Numeric)
+                return cell.NumericCellValue.ToString();
+            return "";
         }
     }
 }
