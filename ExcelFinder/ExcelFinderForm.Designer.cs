@@ -37,6 +37,8 @@
             this.button_SelectFolder = new System.Windows.Forms.Button();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.listView_result = new System.Windows.Forms.ListView();
+            this.txtProcessingFile = new System.Windows.Forms.TextBox();
+            this.lblProgress = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button_Find
@@ -83,6 +85,7 @@
             resources.ApplyResources(this.listView_result, "listView_result");
             this.listView_result.FullRowSelect = true;
             this.listView_result.GridLines = true;
+            this.listView_result.HideSelection = false;
             this.listView_result.Name = "listView_result";
             this.listView_result.OwnerDraw = true;
             this.listView_result.UseCompatibleStateImageBehavior = false;
@@ -92,10 +95,23 @@
             this.listView_result.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_keyword_KeyDown);
             this.listView_result.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView_result_MouseDoubleClick);
             // 
+            // txtProcessingFile
+            // 
+            resources.ApplyResources(this.txtProcessingFile, "txtProcessingFile");
+            this.txtProcessingFile.Name = "txtProcessingFile";
+            this.txtProcessingFile.ReadOnly = true;
+            // 
+            // lblProgress
+            // 
+            resources.ApplyResources(this.lblProgress, "lblProgress");
+            this.lblProgress.Name = "lblProgress";
+            // 
             // ExcelFinder
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.txtProcessingFile);
+            this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.listView_result);
             this.Controls.Add(this.button_SelectFolder);
             this.Controls.Add(this.textBox_folder);
@@ -103,7 +119,11 @@
             this.Controls.Add(this.label_keyword);
             this.Controls.Add(this.textBox_keyword);
             this.Controls.Add(this.button_Find);
+            this.DoubleBuffered = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ExcelFinder";
+            this.Load += new System.EventHandler(this.ExcelFinder_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -119,6 +139,8 @@
         private System.Windows.Forms.Button button_SelectFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.ListView listView_result;
+        private System.Windows.Forms.TextBox txtProcessingFile;
+        private System.Windows.Forms.Label lblProgress;
     }
 }
 

@@ -117,6 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>747, 544</value>
+  </data>
+  <data name="txtProcessingFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 340</value>
+  </data>
+  <data name="&gt;&gt;txtProcessingFile.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="&gt;&gt;label_folder.Name" xml:space="preserve">
     <value>label_folder</value>
   </data>
@@ -124,22 +134,30 @@
   <data name="textBox_folder.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="&gt;&gt;txtProcessingFile.Name" xml:space="preserve">
+    <value>txtProcessingFile</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblProgress.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
   <data name="listView_result.Location" type="System.Drawing.Point, System.Drawing">
     <value>15, 139</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="textBox_keyword.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>ExcelFinder</value>
   </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
   <data name="textBox_folder.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
-  <data name="&gt;&gt;textBox_keyword.Name" xml:space="preserve">
-    <value>textBox_keyword</value>
+  <data name="lblProgress.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 461</value>
   </data>
   <data name="&gt;&gt;textBox_keyword.Parent" xml:space="preserve">
     <value>$this</value>
@@ -147,7 +165,7 @@
   <data name="button_Find.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
   </data>
-  <data name="&gt;&gt;button_SelectFolder.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblProgress.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="label_keyword.Size" type="System.Drawing.Size, System.Drawing">
@@ -159,20 +177,26 @@
   <data name="&gt;&gt;button_SelectFolder.Name" xml:space="preserve">
     <value>button_SelectFolder</value>
   </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
   <data name="&gt;&gt;folderBrowserDialog.Name" xml:space="preserve">
     <value>folderBrowserDialog</value>
   </data>
   <data name="&gt;&gt;button_Find.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="label_folder.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
   <data name="&gt;&gt;listView_result.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="&gt;&gt;label_folder.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
   </data>
   <data name="label_keyword.Text" xml:space="preserve">
     <value>Keyword to search</value>
@@ -184,10 +208,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label_keyword.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
-  <data name="button_Find.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="txtProcessingFile.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
   </data>
   <data name="label_keyword.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -196,7 +220,7 @@
     <value>371, 138</value>
   </data>
   <data name="&gt;&gt;textBox_keyword.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
@@ -204,8 +228,8 @@
   <data name="textBox_folder.Size" type="System.Drawing.Size, System.Drawing">
     <value>344, 20</value>
   </data>
-  <data name="textBox_keyword.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 29</value>
+  <data name="&gt;&gt;lblProgress.Name" xml:space="preserve">
+    <value>lblProgress</value>
   </data>
   <data name="label_folder.Text" xml:space="preserve">
     <value>Folder to search</value>
@@ -219,8 +243,11 @@
   <data name="button_Find.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
   </data>
-  <data name="button_SelectFolder.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="&gt;&gt;txtProcessingFile.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblProgress.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="textBox_keyword.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -234,14 +261,26 @@
   <data name="&gt;&gt;textBox_keyword.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;button_SelectFolder.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <data name="label_folder.Size" type="System.Drawing.Size, System.Drawing">
     <value>83, 13</value>
+  </data>
+  <data name="&gt;&gt;textBox_folder.Name" xml:space="preserve">
+    <value>textBox_folder</value>
   </data>
   <data name="&gt;&gt;button_Find.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;textBox_folder.Name" xml:space="preserve">
-    <value>textBox_folder</value>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;textBox_keyword.Name" xml:space="preserve">
+    <value>textBox_keyword</value>
+  </data>
+  <data name="&gt;&gt;txtProcessingFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button_SelectFolder.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -249,11 +288,11 @@
   <data name="&gt;&gt;listView_result.Name" xml:space="preserve">
     <value>listView_result</value>
   </data>
+  <data name="button_SelectFolder.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
   <data name="textBox_folder.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 83</value>
-  </data>
-  <data name="&gt;&gt;button_Find.Name" xml:space="preserve">
-    <value>button_Find</value>
   </data>
   <data name="&gt;&gt;folderBrowserDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -398,6 +437,9 @@
   <data name="&gt;&gt;button_SelectFolder.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 324</value>
+  </data>
   <data name="$this.Text" xml:space="preserve">
     <value>ExcelFinder</value>
   </data>
@@ -414,7 +456,10 @@
     <value>9, 67</value>
   </data>
   <data name="&gt;&gt;textBox_folder.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;label_keyword.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="&gt;&gt;listView_result.Parent" xml:space="preserve">
     <value>$this</value>
@@ -425,8 +470,11 @@
   <data name="listView_result.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="&gt;&gt;label_keyword.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;button_Find.Name" xml:space="preserve">
+    <value>button_Find</value>
+  </data>
+  <data name="button_Find.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;listView_result.Type" xml:space="preserve">
     <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -437,17 +485,26 @@
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="button_SelectFolder.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="button_SelectFolder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>362, 83</value>
+  <data name="button_SelectFolder.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
   </data>
   <data name="&gt;&gt;label_folder.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="button_SelectFolder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>362, 83</value>
+  </data>
+  <data name="textBox_keyword.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 29</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="button_SelectFolder.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
+  </data>
+  <data name="&gt;&gt;lblProgress.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>en-US</value>

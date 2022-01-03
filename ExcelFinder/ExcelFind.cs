@@ -48,7 +48,7 @@ namespace ExcelFinder
         /// </summary>
         /// <param name="stringToSearch">string to search in xlsx files</param>
         /// <param name="pathToSearch">path to find xlsx files</param>
-        public void FindTextInExcel(string stringToSearch, string pathToSearch)
+        public void FindTextInExcel(string stringToSearch, string pathToSearch, TextBox txtFileName, Label lblProgress)
         {
             // initialize before seaching
             infoList.Clear();
@@ -63,9 +63,14 @@ namespace ExcelFinder
 
             // then enumerate excel(.xlsx) files and search
             string[] files = Directory.GetFiles(pathToSearch, "*.xlsx", SearchOption.AllDirectories);
+            int c = 0;
 
             foreach (var file in files)
             {
+                c++;
+                txtFileName.Text = Path.GetFileName(file);
+                lblProgress.Text = $"Processing file: {c} of {files.Length}";
+
                 // IO exception occurs when file is already opened by others
                 Package spreadSheetPackage = null;
                 try

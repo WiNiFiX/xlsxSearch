@@ -12,6 +12,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.IO;
 using System.IO.Packaging;
+using System.Threading;
 
 namespace ExcelFinder
 {
@@ -110,21 +111,32 @@ namespace ExcelFinder
             UseWaitCursor = true;
             listView_result.Items.Clear(); // initialize
 
-            ExcelFind finder = new ExcelFind();
-            finder.FindTextInExcel(textBox_keyword.Text, textBox_folder.Text);
-
-
-            foreach (ExcelFind.ExcelInfo info in finder.infoList)
+            Thread th = new Thread(delegate ()
             {
-                ListViewItem item = listView_result.Items.Add(info.path);
-                item.SubItems.Add(info.fileName);
-                item.SubItems.Add(info.sheetName);
-                item.SubItems.Add(info.row + ":" + info.column);
-                item.SubItems.Add(info.content);
-            }
+                ExcelFind finder = new ExcelFind();
+                finder.FindTextInExcel(textBox_keyword.Text, textBox_folder.Text, txtProcessingFile, lblProgress);
 
-            listView_result.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            UseWaitCursor = false;
+                int count = 0;
+                foreach (ExcelFind.ExcelInfo info in finder.infoList)
+                {
+                    count++;
+                    if (count > 15) break;
+
+                    ListViewItem item = listView_result.Items.Add(info.path);
+                    item.SubItems.Add(info.fileName);
+                    item.SubItems.Add(info.sheetName);
+                    item.SubItems.Add(info.row + ":" + info.column);
+                    item.SubItems.Add(info.content);
+                }
+
+                listView_result.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                txtProcessingFile.Text = "Done.";
+
+                UseWaitCursor = false;
+            });
+            th.IsBackground = true;
+            th.Start();
         }
 
         private void listView_result_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -150,6 +162,11 @@ namespace ExcelFinder
         private void listView_result_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             e.DrawDefault = true;
+        }
+
+        private void ExcelFinder_Load(object sender, EventArgs e)
+        {
+            CheckForIllegalCrossThreadCalls = false;
         }
     }
 }
