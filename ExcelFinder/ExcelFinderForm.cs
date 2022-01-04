@@ -113,27 +113,35 @@ namespace ExcelFinder
 
             Thread th = new Thread(delegate ()
             {
-                ExcelFind finder = new ExcelFind();
-                finder.FindTextInExcel(textBox_keyword.Text, textBox_folder.Text, txtProcessingFile, lblProgress);
-
-                int count = 0;
-                foreach (ExcelFind.ExcelInfo info in finder.infoList)
+                try
                 {
-                    count++;
-                    if (count > 15) break;
+                    ExcelFind finder = new ExcelFind();
+                    finder.FindTextInExcel(textBox_keyword.Text, textBox_folder.Text, txtProcessingFile, lblProgress);
 
-                    ListViewItem item = listView_result.Items.Add(info.path);
-                    item.SubItems.Add(info.fileName);
-                    item.SubItems.Add(info.sheetName);
-                    item.SubItems.Add(info.row + ":" + info.column);
-                    item.SubItems.Add(info.content);
+                    int count = 0;
+                    foreach (ExcelFind.ExcelInfo info in finder.infoList)
+                    {
+                        count++;
+                        if (count > 15) break;
+
+                        ListViewItem item = listView_result.Items.Add(info.path);
+                        item.SubItems.Add(info.fileName);
+                        item.SubItems.Add(info.sheetName);
+                        item.SubItems.Add(info.row + ":" + info.column);
+                        item.SubItems.Add(info.content);
+                    }
+
+                    listView_result.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                    txtProcessingFile.Text = "Done.";
+
+                    UseWaitCursor = false;
                 }
-
-                listView_result.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-
-                txtProcessingFile.Text = "Done.";
-
-                UseWaitCursor = false;
+                catch(Exception ex)
+                {                    
+                    UseWaitCursor = false;
+                    MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             });
             th.IsBackground = true;
             th.Start();

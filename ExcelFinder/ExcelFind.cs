@@ -10,6 +10,7 @@ using System.IO.Packaging;
 using System.Windows.Forms;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace ExcelFinder
 {
@@ -44,6 +45,8 @@ namespace ExcelFinder
             infoList = new List<ExcelInfo>();
         }
 
+        static string Rewriter(Uri partUri, string id, string uri) => $"http://unknown?id={id}";
+
         /// <summary>
         /// Method to execute seach
         /// 
@@ -73,76 +76,38 @@ namespace ExcelFinder
             foreach (var file in files)
             {
                 c++;
-                txtFileName.Text = Path.GetFileName(file);
-                lblProgress.Text = $"Processing file: {c} of {files.Length}";
+                txtFileName.Text = file;
+                lblProgress.Text = $"Processing file [{Path.GetFileName(file)}]: {c} of {files.Length}";
 
-                if (Path.GetExtension(file).Equals(".xlsx"))
+                IWorkbook mWorkBook = null;                
+
+                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
                 {
-                    // IO exception occurs when file is already opened by others
-                    Package spreadSheetPackage = null;
                     try
                     {
-                        // open file
-                        spreadSheetPackage = Package.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    }
-                    catch (Exception e)
-                    {
-                        ExcelInfo err = new ExcelInfo();
-                        err.error = e.Message;
-                        err.fileName = Path.GetFileName(file);
-                        err.path = Path.GetDirectoryName(file);
-                        err.content = e.Message;
-                        infoList.Add(err);
-                        continue;
-                    }
-
-                    using (SpreadsheetDocument document = SpreadsheetDocument.Open(spreadSheetPackage))
-                    {
-                        var wbPart = document.WorkbookPart;
-                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
-
-                        // loop sheets in workbook
-                        // this pyramid code shall be refactored, not nice.
-                        foreach (var sheet in wbPart.Workbook.Descendants<Sheet>())
+                        if (Path.GetExtension(file).Equals(".xlsx"))
                         {
-                            var wsheetPart = wbPart.GetPartById(sheet.Id) as WorksheetPart;
-                            if (wsheetPart == null)
-                            {
-                                Console.WriteLine("WorksheetPart Not Found !!");
-                                return;
-                            }
+                            mWorkBook = new XSSFWorkbook(fs);
+                        }
+                        else // old XLS format, load and search it...
+                        {
+                            mWorkBook = new HSSFWorkbook(fs);
+                        }
 
-                            var ws = wsheetPart.Worksheet;
-                            foreach (var row in ws.Descendants<Row>())
+                        for (int sheetNo = 0; sheetNo < mWorkBook.NumberOfSheets; sheetNo++)
+                        {
+                            var sheet = mWorkBook.GetSheetAt(sheetNo);
+                            for (int rowNo = 0; rowNo < sheet.LastRowNum; rowNo++)
                             {
                                 var list = new List<string>();
-                                UInt32Value colnum = 0;
-                                foreach (Cell cell in row)
+
+                                var row = sheet.GetRow(rowNo);
+                                if (row == null) continue;
+
+                                for (int colNo = 0; colNo < row.LastCellNum; colNo++)
                                 {
-                                    colnum++; // count up column number
-
-                                    string value = cell.InnerText;
-                                    if (cell.DataType != null)
-                                    {
-                                        switch (cell.DataType.Value)
-                                        {
-                                            case CellValues.Boolean:
-                                            case CellValues.Date:
-                                            case CellValues.Error:
-                                            case CellValues.InlineString:
-                                            case CellValues.Number:
-                                            case CellValues.String:
-                                                value = cell.InnerText;
-                                                break;
-                                            case CellValues.SharedString:
-                                                if (stringTable != null)
-                                                    value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }
-
+                                    var cell = row.GetCell(colNo);
+                                    var value = CellValueAsString(cell, rowNo, colNo, sheet.SheetName, file);
 
                                     // check if value contains keyword to seach
                                     if (!value.Contains(stringToSearch))
@@ -156,9 +121,9 @@ namespace ExcelFinder
                                     // construct data class and store int list
                                     ExcelInfo data = new ExcelInfo();
                                     data.content = value;
-                                    data.row = row.RowIndex;
-                                    data.column = colnum;
-                                    data.sheetName = sheet.Name;
+                                    data.row = (uint)rowNo;
+                                    data.column = (uint)colNo;
+                                    data.sheetName = sheet.SheetName;
                                     data.fileName = Path.GetFileName(file);
                                     data.content = value;
                                     data.path = Path.GetDirectoryName(file);
@@ -168,68 +133,18 @@ namespace ExcelFinder
                             }
                         }
                     }
-                }
-                else // old XLS format, load and search it...
-                {
-                    IWorkbook mWorkBook = null;
-                    using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                    catch (Exception e)
                     {
-                        try
-                        {
-                            mWorkBook = new HSSFWorkbook(fs);
-
-                            for (int sheetNo = 0; sheetNo < mWorkBook.NumberOfSheets; sheetNo++)
-                            {
-                                var sheet = mWorkBook.GetSheetAt(sheetNo);
-                                for (int rowNo = 0; rowNo < sheet.LastRowNum; rowNo++)
-                                {
-                                    var list = new List<string>();
-
-                                    var row = sheet.GetRow(rowNo);
-                                    if (row == null) continue;
-
-                                    for (int colNo = 0; colNo < row.LastCellNum; colNo++)
-                                    {
-                                        var cell = row.GetCell(colNo);
-                                        var value = CellValueAsString(cell, rowNo, colNo, sheet.SheetName, file);
-
-                                        // check if value contains keyword to seach
-                                        if (!value.Contains(stringToSearch))
-                                        {
-                                            continue;
-                                        }
-
-                                        // go on if keyword found
-                                        list.Add(value);
-
-                                        // construct data class and store int list
-                                        ExcelInfo data = new ExcelInfo();
-                                        data.content = value;
-                                        data.row = (uint)rowNo;
-                                        data.column = (uint)colNo;
-                                        data.sheetName = sheet.SheetName;
-                                        data.fileName = Path.GetFileName(file);
-                                        data.content = value;
-                                        data.path = Path.GetDirectoryName(file);
-
-                                        infoList.Add(data);
-                                    }
-                                }
-                            }
-                        }
-                        catch(Exception e)
-                        {
-                            ExcelInfo err = new ExcelInfo();
-                            err.error = e.Message;
-                            err.fileName = Path.GetFileName(file);
-                            err.path = Path.GetDirectoryName(file);
-                            err.content = e.Message;
-                            infoList.Add(err);
-                            continue;
-                        }
+                        ExcelInfo err = new ExcelInfo();
+                        err.error = e.Message;
+                        err.fileName = Path.GetFileName(file);
+                        err.path = Path.GetDirectoryName(file);
+                        err.content = e.Message;
+                        infoList.Add(err);
+                        continue;
                     }
                 }
-                
+
             }
         }
 
